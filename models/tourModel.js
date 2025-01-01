@@ -134,6 +134,16 @@ tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
 });
 
+// Virtual populate to get reviews data in certain tour
+tourSchema.virtual('reviews', {
+  // references collection
+  ref: 'Review',
+  // field in foreign field at review
+  foreignField: 'tour',
+  // _id current field that connect foreignField
+  localField: '_id'
+})
+
 // DOCUMENT MIDDLEWARE: runs before .save() and .create() except .insertMany()
 tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
