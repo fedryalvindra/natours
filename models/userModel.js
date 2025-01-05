@@ -52,6 +52,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+// PASSWORD ENCRYPTION
 // document middleware to encrypt password (using pre)
 userSchema.pre('save', async function (next) {
   // if password not updated and created, we do not want to encrypt the password

@@ -82,6 +82,7 @@ exports.getAll = (Model) =>
       .paginate();
 
     console.log(req.query);
+    // const doc = await features.query.explain();
     const doc = await features.query;
 
     // use mongoose method

@@ -129,6 +129,13 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
+// CREATE PRICE INDEXES: for read performance
+// tourSchema.index({ price: 1 });
+
+// Create compound index
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ slug: 1 });
+
 // virtual props cant be querying, because this props its not part of DB
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
@@ -141,8 +148,8 @@ tourSchema.virtual('reviews', {
   // field in foreign field at review
   foreignField: 'tour',
   // _id current field that connect foreignField
-  localField: '_id'
-})
+  localField: '_id',
+});
 
 // DOCUMENT MIDDLEWARE: runs before .save() and .create() except .insertMany()
 tourSchema.pre('save', function (next) {
