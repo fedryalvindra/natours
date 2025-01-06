@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Tour = require('./tourModel');
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -32,6 +33,9 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
+// prevent user to do multiple review for same tour
+reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
+
 // populate tour and user
 reviewSchema.pre(/^find/, function (next) {
   // this.populate({
@@ -48,6 +52,61 @@ reviewSchema.pre(/^find/, function (next) {
   });
 
   next();
+});
+
+// static function: this = current model so we can use aggregate
+reviewSchema.statics.calcAverageRatings = async function (tourId) {
+  console.log(tourId);
+  // "this" point to the current model
+  const stats = await this.aggregate([
+    {
+      $match: {
+        tour: tourId,
+      },
+    },
+    {
+      $group: {
+        // group by tour
+        _id: '$tour',
+        nRating: { $sum: 1 },
+        avgRating: { $avg: '$rating' },
+      },
+    },
+  ]);
+  // console.log(stats);
+
+  if (stats.length > 0) {
+    await Tour.findByIdAndUpdate(tourId, {
+      // stats store in array
+      ratingsQuantity: stats[0].nRating,
+      ratingsAverage: stats[0].avgRating,
+    });
+  } else {
+    await Tour.findByIdAndUpdate(tourId, {
+      // stats store in array
+      ratingsQuantity: 0,
+      ratingsAverage: 4.5,
+    });
+  }
+};
+
+reviewSchema.post('save', function () {
+  // this points to current review
+  // this.contructor = Review
+  this.constructor.calcAverageRatings(this.tour);
+});
+
+// the goals is to get current review document
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+  // get stale review data but we just need the tourId
+  this.r = await this.findOne();
+  // console.log(this.r);
+  next();
+});
+
+reviewSchema.post(/^findOneAnd/, async function () {
+  // await this.findOne(); does NOT workhere, query has already executed
+  await this.r.constructor.calcAverageRatings(this.r.tour);
 });
 
 const Review = mongoose.model('Review', reviewSchema);
