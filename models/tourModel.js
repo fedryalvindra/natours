@@ -136,6 +136,8 @@ const tourSchema = new mongoose.Schema(
 // Create compound index
 tourSchema.index({ price: 1, ratingsAverage: -1 });
 tourSchema.index({ slug: 1 });
+// we need create index for geospatial
+tourSchema.index({ startLocation: '2dsphere' });
 
 // virtual props cant be querying, because this props its not part of DB
 tourSchema.virtual('durationWeeks').get(function () {
