@@ -12,6 +12,7 @@ const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const viewRouter = require('./routes/viewRoutes');
 
 const app = express();
 
@@ -86,14 +87,7 @@ app.use((req, res, next) => {
 
 // 3). Routes
 // rendering base page
-app.get('/', (req, res) => {
-  res.status(200).render('base', {
-    // pass data to pug template
-    tour: 'The Forest Hiker',
-    user: 'Fedry'
-  })
-})
-
+app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
