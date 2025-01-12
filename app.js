@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
@@ -14,7 +15,17 @@ const reviewRouter = require('./routes/reviewRoutes');
 
 const app = express();
 
+// use pug engine
+app.set('view engine', 'pug');
+// set view for pug
+app.set('views', path.join(__dirname, 'views'));
+
 // 1). GLOBAL MIDDLEWARES
+
+// express.static = to serve static file like (HTML, CSS, JS)
+// public become root
+// app.use(express.static(`${__dirname}/public`));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Set security HTTP headers
 // helmet is standard in express development to set header security
@@ -65,10 +76,6 @@ app.use(
   })
 );
 
-// express.static = to serve static file like (HTML, CSS, JS)
-// public become root
-app.use(express.static(`${__dirname}/public`));
-
 // make middleware function (apply on every single request)
 // if we didnt call next function req&res cycle will be stuck
 app.use((req, res, next) => {
@@ -76,6 +83,16 @@ app.use((req, res, next) => {
   // console.log(req.headers);
   next();
 });
+
+// 3). Routes
+// rendering base page
+app.get('/', (req, res) => {
+  res.status(200).render('base', {
+    // pass data to pug template
+    tour: 'The Forest Hiker',
+    user: 'Fedry'
+  })
+})
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);

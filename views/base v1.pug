@@ -1,0 +1,23 @@
+doctype html
+//- use tab for tag that inside another tag
+html 
+    head 
+        //- using like ES6 template string
+        title Natours | #{tour}
+        //- <link rel="stylesheet" href="css/style.css" />
+        //- parenthesis for properties
+        link(rel='stylesheet' href='css/style.css')
+        link(rel='shortcut icon' type='image/png' href='img/favicon.png')
+
+    body 
+        //- <h1>The Park Camper </h1>
+        //- use variable
+        h1= tour
+        //- we can also call simple JS
+        h2= user.toUpperCase()
+
+        //- unbuffered code
+        - const x = 9;
+        h2= 2*x
+
+        p This is just some text 
