@@ -31,6 +31,8 @@
     "node": ">=10.0.0"
   },
   "devDependencies": {
-    "ndb": "^1.1.5"
+    "@prettier/plugin-pug": "^3.2.0",
+    "ndb": "^1.1.5",
+    "prettier": "^3.4.2"
   }
 }
