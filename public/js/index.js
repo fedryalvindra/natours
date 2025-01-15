@@ -1,10 +1,11 @@
 // import { displayMap } from './leaflet';
-import { login } from './login';
+import { login, logout } from './login';
 import { displayMap } from './leaflet';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form');
+const logoutBtn = document.querySelector('.nav__el--logout');
 
 // VALUES
 
@@ -24,3 +25,5 @@ if (loginForm) {
     login(email, password);
   });
 }
+
+if (logoutBtn) logoutBtn.addEventListener('click', logout);
