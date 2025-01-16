@@ -83,6 +83,7 @@ app.use('/api', limiter);
 // get req.body
 // limitting amount of data in req body
 app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
 // Data sanitization against NoSQL query injection
