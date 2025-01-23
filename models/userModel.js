@@ -15,7 +15,10 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     validate: [validator.isEmail, 'Please Provide a valid email'],
   },
-  photo: String,
+  photo: {
+    type: String,
+    default: 'default.jpg',
+  },
   role: {
     type: String,
     enum: ['user', 'guide', 'lead-guide', 'admin'],
@@ -90,7 +93,7 @@ userSchema.pre(/^find/, function (next) {
 // instance method = method that will available on all docs in certain collection
 userSchema.methods.correctPassword = async function (
   candidatePassword,
-  userPassword
+  userPassword,
 ) {
   // candidate = input password, userPassword = password hashed
   // return true or false
@@ -102,7 +105,7 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
     // convert passwordChangedAt to timestamp
     const changedTimestamp = parseInt(
       this.passwordChangedAt.getTime() / 1000,
-      10
+      10,
     );
 
     return JWTTimestamp < changedTimestamp; // 300 < 500 true
