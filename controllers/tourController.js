@@ -1,3 +1,5 @@
+const multer = require('multer');
+const sharp = require('sharp');
 const Tour = require('./../models/tourModel');
 const catchAsync = require('./../utils/catchAsync');
 const factory = require('./handlerFactory');
@@ -6,6 +8,40 @@ const AppError = require('./../utils/appError');
 // const tours = JSON.parse(
 //   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 // );
+
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb(new AppError('Not an image! Please upload only images.', 400), false);
+  }
+};
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+// for mixed upload
+exports.uploadTourImages = upload.fields([
+  { name: 'imageCover', maxCount: 1 },
+  {
+    name: 'images',
+    maxCount: 3,
+  },
+]);
+
+// 1). for single upload
+// upload.single('image'): req.file
+// 2). for multiple upload
+// upload.array('images', 3): req.files
+
+exports.resizeTourImages = (req, res, next) => {
+  console.log(req.files);
+  next();
+};
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
@@ -146,8 +182,8 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
     next(
       new AppError(
         'Please provide latitute and longitude in the format lat,lng.',
-        400
-      )
+        400,
+      ),
     );
   }
 
@@ -174,8 +210,8 @@ exports.getDistances = catchAsync(async (req, res, next) => {
     next(
       new AppError(
         'Please provide latitute and longitude in the format lat,lng.',
-        400
-      )
+        400,
+      ),
     );
   }
 
