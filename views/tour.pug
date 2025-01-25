@@ -14,6 +14,7 @@ block append head
     integrity='sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=',
     crossorigin=''
   )
+  script(src="https://js.stripe.com/v3/")
   //- script(defer, src='/js/leaflet.js')
 
 //- reusable
@@ -112,4 +113,10 @@ block content
       .cta__content
         h2.heading-secondary What are you waiting for?
         p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
-        button.btn.btn--green.span-all-rows Book tour now!
+
+        if user
+          button#book-tour.btn.btn--green.span-all-rows(
+            data-tour-id=`${tour.id}`
+          ) Book tour now!
+        else
+          a.btn.btn--green.span-all-rows(href='/login') log in to book tour
