@@ -2518,7 +2518,7 @@
     try {
       const res = await axios_default({
         method: "POST",
-        url: "http://127.0.0.1:3000/api/v1/users/login",
+        url: "/api/v1/users/login",
         // send data through body
         data: {
           email,
@@ -2539,7 +2539,7 @@
     try {
       const res = await axios_default({
         method: "GET",
-        url: "http://127.0.0.1:3000/api/v1/users/logout"
+        url: "/api/v1/users/logout"
       });
       if (res.data.status = "success") location.reload(true);
     } catch (error) {
@@ -2570,7 +2570,7 @@
   var updateSettings = async (data, type) => {
     console.log(data);
     try {
-      const url = type === "password" ? "http://127.0.0.1:3000/api/v1/users/updateMyPassword" : "http://127.0.0.1:3000/api/v1/users/updateMe";
+      const url = type === "password" ? "/api/v1/users/updateMyPassword" : "/api/v1/users/updateMe";
       const res = await axios_default({
         method: "PATCH",
         url,
@@ -2585,14 +2585,9 @@
   };
 
   // public/js/stripe.js
-  var stripe = Stripe(
-    "pk_test_51QlBGqFH7f0Yl5JOv0vdqe2jaxLBThQPg6EAo1P2KJAXqbE5n6uJaCjlr5KL1Ld7igZmisxrv2zaWvfHxoqWBm8K00YO3qhlST"
-  );
   var bookTour = async (tourId) => {
     try {
-      const session = await axios_default(
-        `http://127.0.0.1:3000/api/v1/bookings/checkout-session/${tourId}`
-      );
+      const session = await axios_default(`/api/v1/bookings/checkout-session/${tourId}`);
       console.log(session);
       const checkoutPageUrl = session.data.session.url;
       window.location.assign(checkoutPageUrl);
@@ -2631,7 +2626,6 @@
       form.append("name", document.getElementById("name").value);
       form.append("email", document.getElementById("email").value);
       form.append("photo", document.getElementById("photo").files[0]);
-      console.log(form);
       updateSettings(form, "data");
     });
   if (userPasswordForm)

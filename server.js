@@ -3,8 +3,8 @@ const dotenv = require('dotenv');
 
 // LISTENING TO SYNC CODE BUGS
 process.on('uncaughtException', (err) => {
-  console.log('UNCAUGHT EXCEPTION! 🔴 SHUTTING DOWN');
-  console.log(err.name, err.message);
+  // console.log('UNCAUGHT EXCEPTION! 🔴 SHUTTING DOWN');
+  // console.log(err.name, err.message);
   // shutdown server first
   process.exit(1);
 });
