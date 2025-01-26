@@ -14,7 +14,7 @@ html
       title Natours | #{ title }
       //- apearing the js script
 
-  body
+  body(data-alert=`${alert ? alert : ''}`)
     // Header
     //- include to import
     include _header
