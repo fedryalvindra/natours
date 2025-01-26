@@ -18,6 +18,7 @@
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.5",
     "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "esbuild": "0.24.2",
     "express": "^4.21.1",
@@ -42,7 +43,7 @@
     "xss-clean": "^0.1.4"
   },
   "engines": {
-    "node": ">=10.0.0"
+    "node": "^22"
   },
   "devDependencies": {
     "@prettier/plugin-pug": "^3.2.0",
