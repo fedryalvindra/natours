@@ -8,6 +8,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 // get access to cookie
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const compression = require('compression');
 const cors = require('cors');
 
@@ -17,6 +18,7 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
+const { webhookCheckout } = require('./controllers/bookingController');
 const viewRouter = require('./routes/viewRoutes');
 
 // Start express app
@@ -41,7 +43,7 @@ app.use(cors());
 
 // allow non simple request use .option http method
 // * for all the route
-app.options('*', cors())
+app.options('*', cors());
 // app.options('api/v1/tours/:id', cors())
 
 // express.static = to serve static file like (HTML, CSS, JS)
@@ -102,9 +104,17 @@ const limiter = rateLimit({
 // effect limiter to only that start with /api
 app.use('/api', limiter);
 
+// body parse to be string so we define here
+app.post(
+  '/webhook-checkout',
+  bodyParser.raw({ type: 'application/json' }),
+  webhookCheckout,
+);
+
 // express.json = middleware for body parser
 // get req.body
 // limitting amount of data in req body
+// body parse to be json
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
@@ -143,7 +153,7 @@ app.use((req, res, next) => {
 // 3). Routes
 // rendering base page
 app.use('/', viewRouter);
-app.use('/api/v1/tours',  tourRouter);
+app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
